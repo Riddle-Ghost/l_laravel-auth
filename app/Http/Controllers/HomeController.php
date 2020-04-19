@@ -3,15 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
-use App\Models\Topic;
 
 class HomeController extends Controller
 {
 
-    public function index() {
-
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
         return view('welcome');
     }
 
+    public function authenticated() 
+    {
+        return view('home');
+    }
 }
