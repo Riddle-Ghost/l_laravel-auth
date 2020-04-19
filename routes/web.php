@@ -33,6 +33,8 @@ Route::group(['middleware' => 'guest'], function() {
 
 Route::group(['middleware' => 'auth'], function() {
 
+    Route::get('/home', 'HomeController@authenticated');
+
     Route::group(['namespace' => 'Auth'], function() { 
 
         Route::post('logout', 'Auth\LoginController@logout')->name('logout');
