@@ -56,11 +56,7 @@ class VerificationController extends Controller
                 ->with('error', 'Ошибка. Неверная ссылка');
         }
 
-        $user->email_verified_at = now();
-        $user->verify_token = null;
-        $user->save();
-
-        event(new Verified($user));
+        $user->markEmailAsVerified();
 
         return redirect()->route('login')
             ->with('success', 'Эмейл успешно подтвержден. Теперь вы можете войти на сайт');
@@ -74,7 +70,7 @@ class VerificationController extends Controller
      */
     public function resend(Request $request)
     {
-        $user = User::where('email', $request['email'])->first();
+        $user = User::where('email', $request->email)->first();
 
         if($user) {
 

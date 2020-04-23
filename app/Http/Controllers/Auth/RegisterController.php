@@ -59,9 +59,6 @@ class RegisterController extends Controller
             'verify_token' => \Str::random(25),
         ]);
 
-        // Mail::to($user->email)->send(new VerifyMail($user));
-        $user->sendEmailVerificationNotification();
-
         return $user;
     }
 }
