@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Support\Facades\Auth;
+use App\models\User;
 
 class LoginController extends Controller
 {
@@ -28,7 +30,6 @@ class LoginController extends Controller
      */
     public function login(LoginRequest $request)
     {
-
         if (method_exists($this, 'hasTooManyLoginAttempts') &&
             $this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
@@ -45,12 +46,27 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-    public function authenticated(Request $request, $user)
+    public function authenticated(LoginRequest $request, $user)
     {
-        if ($user->email_verified_at === null) {
-            $this->guard()->logout();
-            return back()->with('error', 'Требуется подтвердить аккаунт. Пожалуйста проверьте Ваш эмейл');
+        if ($this->isValidUser($user) ) {
+
+            return redirect()->intended($this->redirectPath());
         }
-        return redirect()->intended($this->redirectPath());
+        
+        Auth::logout();
+        return back();
+    }
+
+    private function isValidUser($user)
+    {
+        if (!$user->hasVerifiedEmail()) {
+            
+            session()->flash('error', 'Требуется подтвердить аккаунт. Пожалуйста проверьте Ваш эмейл');
+        }
+        elseif ($user->isBanned()) {
+            
+            session()->flash('error', 'Вы забанены');
+        }
+        return $user->hasVerifiedEmail() && !$user->isBanned();
     }
 }

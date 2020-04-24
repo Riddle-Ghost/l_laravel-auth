@@ -5,9 +5,16 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\VerifyEmail;
+use App\Notifications\PasswordResetNotification;
 
 class User extends Authenticatable
 {
+    const USER = 0;
+    const ADMIN = 1;
+
+    const NORMAL = 0;
+    const BANNED = 1;
+
     use Notifiable;
 
     /**
@@ -68,5 +75,15 @@ class User extends Authenticatable
             'email_verified_at' => $this->freshTimestamp(),
             'verify_token' => null,
         ])->save();
+    }
+
+    public function isBanned()
+    {
+        return $this->status === self::BANNED;
+    }
+
+    public function sendPasswordResetNotification($token) {
+
+        $this->notify(new PasswordResetNotification($token));
     }
 }
