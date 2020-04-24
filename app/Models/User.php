@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Notifications\VerifyEmail;
+use App\Notifications\VerifyEmailNotification;
 use App\Notifications\PasswordResetNotification;
 
 class User extends Authenticatable
@@ -51,7 +51,7 @@ class User extends Authenticatable
      */
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new VerifyEmail);
+        $this->notify(new VerifyEmailNotification);
     }
 
     /**
