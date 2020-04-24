@@ -41,6 +41,6 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::group(['namespace' => 'Auth'], function() { 
 
-        Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+        Route::post('logout', 'LoginController@logout')->name('logout');
     });
 });
